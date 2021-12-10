@@ -8,7 +8,7 @@ function TestTile(props) {
     style={styles.container}>
 
       <Text style={styles.title}>
-        {props.test.title}
+        {props.test.name}
       </Text>
 
       <View style={styles.tagsContainer}>
