@@ -76,9 +76,13 @@ function TestScreen(props) {
   }
 
   useEffect(() => {
-    props.navigation.addListener('focus', init);
-    props.navigation.addListener('blur', exit);
-  })
+    navigation.addListener('focus', init)
+    navigation.addListener('blur', exit)
+    return () => {
+                navigation.removeListener('focus', init)
+                navigation.removeListener('blur', exit)
+            }
+  }, [navigation]);
 
   return (
     <View style={styles.container}>

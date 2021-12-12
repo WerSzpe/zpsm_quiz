@@ -21,7 +21,7 @@ export default function App(props) {
     }
   }
 
-  useEffect( () => checkFirst())
+  useEffect( () => {checkFirst();});
 
   confirm = async(username) => {
     if(!username)

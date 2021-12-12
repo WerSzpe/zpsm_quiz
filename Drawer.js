@@ -26,7 +26,9 @@ function Drawer (props) {
         }
     }
 
-    useEffect( () => getTests);
+    useEffect( () => {
+        getTests();
+    });
 
     const Drawer = createDrawerNavigator();
 

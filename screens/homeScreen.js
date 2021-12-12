@@ -15,14 +15,6 @@ function HomeScreen(props) {
   );
 
   return (
-
-    /*<FlatList
-      style={styles.container}
-      ListHeaderComponent={<SeeResultBtn navigation={props.navigation}/>}
-      data={tests}
-      renderItem={renderItem}
-      keyExtractor={item=>item.id}
-    />*/
     <FlatList
       refreshControl={
         <RefreshControl

@@ -7,7 +7,7 @@ import ResultTile from './components/resultTile';
 function ScoresScreen(props) {
 
   const [results, setResults] = useState([]);
-  const [refreshing, setRefreshing] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   const getResult = async() => {
     setRefreshing(true);
