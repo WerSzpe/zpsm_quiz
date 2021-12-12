@@ -4,13 +4,13 @@ import { useEffect, useState } from 'react';
 
 import ResultTile from './components/resultTile';
 
-////////////////////////////////////////////////////////////
-
 function ScoresScreen(props) {
 
   const [results, setResults] = useState([]);
+  const [refreshing, setRefreshing] = useState(true);
 
   const getResult = async() => {
+    setRefreshing(true);
     try{
       const results1 = await (await fetch('http://tgryl.pl/quiz/results')).json();
       setResults(results1);
@@ -18,17 +18,28 @@ function ScoresScreen(props) {
     catch(error){
       console.log(error);
     }
+    setRefreshing(false);
   }
 
   const renderItem = ({ item }) => (
       <ResultTile result={item} navigation={props.navigation} />
   );
 
-  useEffect( () => {getResult()})
+  const init = () => {
+    getResult();
+  };
+
+  useEffect( () => {props.navigation.addListener('focus', init)})
 
   return (
 
     <FlatList
+      refreshControl={
+        <RefreshControl
+          refreshing={props.loading}
+          onRefresh={getResult}
+        />
+      }
       style={styles.container}
       data={results}
       renderItem={renderItem}

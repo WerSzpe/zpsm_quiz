@@ -1,24 +1,40 @@
 import * as React from 'react';
-import { Button, View, Text,StyleSheet } from 'react-native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
+import { AsyncStorage, View, Text } from 'react-native';
+import { useState, useEffect } from 'react';
 
-import HomeScreen from './screens/homeScreen';
-import TestScreen from './screens/testScreen';
-import ScoresScreen from './screens/scoresScreen';
+import WelcomeScreen from './screens/welcomeScreen';
+import Drawer from './Drawer';
 
-const Drawer = createDrawerNavigator();
+export default function App(props) {
+  const [value, setValue] = useState(false);
 
-export default function App() {
-  return (
-    <NavigationContainer >
-      <Drawer.Navigator initialRouteName="Home">
+  const checkFirst = async() =>{
+    try {
+      const value = await AsyncStorage.getItem('username');
+      if(value !== null) {
+        setValue(false);
+      } else {
+        setValue(true);
+      }
+    } catch (error) {
+      setValue(true);
+    }
+  }
 
-        <Drawer.Screen name="Home" component={HomeScreen} />
-        <Drawer.Screen name="Test" component={TestScreen} />
-        <Drawer.Screen name="Scores" component={ScoresScreen} />
+  useEffect( () => checkFirst())
 
-      </Drawer.Navigator>
-    </NavigationContainer>
-  );
+  confirm = async(username) => {
+    if(!username)
+      return;
+    try{
+      await AsyncStorage.setItem('username', username);
+    } catch (error) {
+      console.log(error);
+    }
+    setValue(false);
+  }
+
+  return(
+    props.value ? (<WelcomeScreen confirm={confirm}/>) : (<Drawer/>)
+  )
 }
