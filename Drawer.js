@@ -14,21 +14,24 @@ function Drawer (props) {
 
     const getTests = async() => {
         try{
+            setLoading(true);
             const tests = await (await fetch('http://tgryl.pl/quiz/tests')).json();
             for(let test of tests){
                 const details = await (await fetch('http://tgryl.pl/quiz/test/'+test.id)).json();
                 test.details = details;
             }
             setTests(tests);
-            setLoading(false);
         } catch(error){
             console.log(error);
+        }
+        finally{
+          setLoading(false);
         }
     }
 
     useEffect( () => {
         getTests();
-    });
+    }, []);
 
     const Drawer = createDrawerNavigator();
 
@@ -38,7 +41,7 @@ function Drawer (props) {
 
             <Drawer.Screen name="Home">
                 {({navigation}) => <HomeScreen navigation={navigation}
-                                    tests={props.tests} loading={props.loading}
+                                    tests={tests} loading={loading}
                                     refreshCallback={getTests}/>}
             </Drawer.Screen>
 
@@ -48,7 +51,7 @@ function Drawer (props) {
 
             {tests.map((test, key) =>
                 <Drawer.Screen name={test.name}  key={key} >
-                    {({navigation}) => <TestScreen navigation={navigation} test={test} />}
+                    {({navigation}) => <TestScreen navigation={navigation} test={test} username={props.username} />}
                 </Drawer.Screen>
             )}
 

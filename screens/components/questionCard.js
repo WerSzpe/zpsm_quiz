@@ -40,20 +40,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#021417'
   },
-  answer:{
-    flex:2,
-    fontSize: 20,
-    margin: 10,
-    width: '80%',
-    margin: 20,
-    alignItems: 'center',
-    justifyContent:'center',
-    backgroundColor: '#0b544f',
-    borderRadius: 20
-  },
-  answerText:{
-      color: 'white'
-  }
 
 })
 

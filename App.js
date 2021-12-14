@@ -1,18 +1,31 @@
 import * as React from 'react';
 import { AsyncStorage, View, Text } from 'react-native';
 import { useState, useEffect } from 'react';
-
+import {setCustomText} from 'react-native-global-props';
+import {LogBox } from 'react-native';
+LogBox.ignoreLogs(['Reanimated 2', 'AsyncStorage']);
 import WelcomeScreen from './screens/welcomeScreen';
 import Drawer from './Drawer';
 
+const globalTextProps = {
+  style: {
+    fontFamily: 'Ubuntu-Bold'
+  }
+};
+
+setCustomText(globalTextProps);
+
 export default function App(props) {
   const [value, setValue] = useState(false);
+  const [username, setUsername] = useState('');
 
   const checkFirst = async() =>{
     try {
       const value = await AsyncStorage.getItem('username');
-      if(value !== null) {
+      if(value != null) {
         setValue(false);
+        setUsername(value);
+
       } else {
         setValue(true);
       }
@@ -21,9 +34,23 @@ export default function App(props) {
     }
   }
 
-  useEffect( () => {checkFirst();});
+  useEffect( () => {checkFirst();}, []);
 
-  confirm = async(username) => {
+  const clear = async() => {
+    if(!username)
+      return;
+    try{
+      await AsyncStorage.setItem('username', '');
+    } catch (error) {
+      console.log(error);
+    }
+    setValue(true);
+    setUsername('');
+  }
+
+
+
+  const confirm = async(username) => {
     if(!username)
       return;
     try{
@@ -32,9 +59,10 @@ export default function App(props) {
       console.log(error);
     }
     setValue(false);
+    setUsername(username)
   }
 
   return(
-    props.value ? (<WelcomeScreen confirm={confirm}/>) : (<Drawer/>)
+    value ? (<WelcomeScreen confirm={confirm}/>) : (<Drawer username={username}/>)
   )
 }

@@ -25,18 +25,15 @@ function ScoresScreen(props) {
       <ResultTile result={item} navigation={props.navigation} />
   );
 
-  const init = () => {
-    getResult();
-  };
 
-  useEffect( () => {props.navigation.addListener('focus', init)})
+  useEffect( () => {getResult()}, [])
 
   return (
 
     <FlatList
       refreshControl={
         <RefreshControl
-          refreshing={props.loading}
+          refreshing={refreshing}
           onRefresh={getResult}
         />
       }
@@ -54,7 +51,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#bdded4'
   },
-
 })
 
 export default ScoresScreen;

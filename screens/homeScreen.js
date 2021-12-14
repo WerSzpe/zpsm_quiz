@@ -6,9 +6,8 @@ import SeeResultBtn from './components/seeResultBtn.js';
 import TestTile from './components/testTile';
 
 function HomeScreen(props) {
-  const [refreshing, setRefreshing] = React.useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
-  useEffect( () => {props.refreshCallback()})
 
   const renderItem = ({ item }) => (
         <TestTile test={item} navigation={props.navigation} />
