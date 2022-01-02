@@ -36,20 +36,6 @@ export default function App(props) {
 
   useEffect( () => {checkFirst();}, []);
 
-  const clear = async() => {
-    if(!username)
-      return;
-    try{
-      await AsyncStorage.setItem('username', '');
-    } catch (error) {
-      console.log(error);
-    }
-    setValue(true);
-    setUsername('');
-  }
-
-
-
   const confirm = async(username) => {
     if(!username)
       return;
