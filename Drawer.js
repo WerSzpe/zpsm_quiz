@@ -20,10 +20,9 @@ function Drawer (props) {
     const [connected, setConnected] = useState(false);
 
     const getTests = async() => {
+        let db;
         try{
-            setLoading(true);
-            setTests([]);
-            const db = await SQLite.openDatabase('tests');
+            db = await SQLite.openDatabase('tests');
             await db.executeSql(`CREATE TABLE IF NOT EXISTS 'tests' (
                 'id' TEXT NOT NULL,
                 'test' TEXT NOT NULL,
@@ -35,13 +34,15 @@ function Drawer (props) {
                 FOREIGN KEY("id") REFERENCES "tests"("id"),
                 PRIMARY KEY("id")
             );`);
+            setLoading(true);
+            setTests([]);
             let connection = await NetInfo.fetch();
             if(connection.isInternetReachable) {
                 const tests = await (await fetch('http://tgryl.pl/quiz/tests')).json();
                 await db.executeSql('DELETE FROM tests');
                 await db.executeSql('DELETE FROM tests_details');
                 for(let test of tests) {
-                    const details = await (await fetch('http://tgryl.pl/quiz/test'+test.id)).json();
+                    const details = await (await fetch('http://tgryl.pl/quiz/test/'+test.id)).json();
                     await db.executeSql(`INSERT INTO tests VALUES (?,?);`, [test.id, JSON.stringify(test)]);
                     await db.executeSql(`INSERT INTO tests_details VALUES (?, ?);`, [details.id, JSON.stringify(details)]);
                 }
@@ -54,7 +55,7 @@ function Drawer (props) {
 
             for(let test of status[0].rows.raw()) {
                 test=JSON.parse(test.test);
-                status = await db.executeSql(`SELECT test FROM test_details WHERE id=?;`, [test.id]);
+                status = await db.executeSql(`SELECT test FROM tests_details WHERE id=?;`, [test.id]);
                 test.details = JSON.parse(status[0].rows.raw()[0].test);
                 tests.push(test);
             }
@@ -71,12 +72,13 @@ function Drawer (props) {
         getTests();
     }, []);
 
+    const username=props.username;
     const Drawer = createDrawerNavigator();
 
     return (
         <NavigationContainer >
             <Drawer.Navigator drawerContent={props =>
-                <DrawerContent {...props} dividerAfter={2} refreshCallback={getTests} connected={props.connected} username={props.username} />
+                <DrawerContent {...props} dividerAfter={2} refreshCallback={getTests} connected={connected} username={username} />
             }>
 
             <Drawer.Screen name="Home">

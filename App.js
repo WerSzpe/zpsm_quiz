@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AsyncStorage, View, Text } from 'react-native';
+import { AsyncStorage} from 'react-native';
 import { useState, useEffect } from 'react';
 import {setCustomText} from 'react-native-global-props';
 import {LogBox } from 'react-native';
